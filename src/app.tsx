@@ -1,17 +1,22 @@
+import React from 'react';
 import { appState } from './state';
 
 export function App() {
     const [state] = appState.useState();
-    const { sum, innerUseState } = state.useSelector((state, trigger) => {
-        state.inner?.bind(trigger);
+    const { sum, inner } = state.useSelector(
+        (state) => {
+            return {
+                sum: state.index1 + state.index2,
+                inner: state.inner,
+            };
+        },
+        undefined,
+        (triggerFn) => {
+            const off = state.inner?.bind(triggerFn);
+            return off;
+        },
+    );
 
-        return {
-            sum: state.index1 + state.index2,
-            innerUseState: state.inner?.inner,
-        };
-    });
-
-    const [inner] = innerUseState?.() || [];
     return (
         <>
             <div>

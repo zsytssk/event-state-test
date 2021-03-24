@@ -11,7 +11,11 @@ class State extends EventState {
     public index2 = 0;
     public inner: Inner;
     constructor() {
-        super([StateEvent.UpdateIndex1, StateEvent.UpdateIndex2]);
+        super([
+            StateEvent.UpdateIndex1,
+            StateEvent.UpdateIndex2,
+            StateEvent.AddInner,
+        ]);
     }
     public updateIndex1() {
         this.index1 += 1;
