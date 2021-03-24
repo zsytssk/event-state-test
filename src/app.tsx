@@ -2,9 +2,14 @@ import { appState } from './state';
 
 export function App() {
     const [state] = appState.useState();
-    const { sum, inner } = state.useSelector((state) => {
-        return { sum: state.index1 + state.index2, inner: state.inner.index };
+    const { sum, innerUseState } = state.useSelector((state) => {
+        return {
+            sum: state.index1 + state.index2,
+            innerUseState: state.inner?.useState,
+        };
     });
+
+    const [inner] = innerUseState?.() || [];
     return (
         <>
             <div>
@@ -14,9 +19,11 @@ export function App() {
                 <button onClick={() => state.updateIndex2()}>
                     index2:{state.index2}
                 </button>
+                <button onClick={() => state.addInner()}>addInner</button>
                 <button onClick={() => state?.inner?.updateIndex()}>
-                    inner:{inner}
+                    inner:{inner?.index}
                 </button>
+
                 <div>
                     <span>sum:{sum}</span>
                 </div>
