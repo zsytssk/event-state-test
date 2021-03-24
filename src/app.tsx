@@ -1,8 +1,8 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { appState } from './state';
 
 export function App() {
-    const [state] = appState.useState();
+    const [state, stateId] = appState.useState();
     const { sum, inner } = state.useSelector(
         (state) => {
             return {
@@ -12,10 +12,15 @@ export function App() {
         },
         undefined,
         (triggerFn) => {
+            /** 绑定 state.inner 的修改 */
             const off = state.inner?.bind(triggerFn);
             return off;
         },
     );
+
+    useEffect(() => {
+        console.log(`state has change`);
+    }, [stateId]);
 
     return (
         <>
@@ -27,12 +32,16 @@ export function App() {
                     index2:{state.index2}
                 </button>
                 <button onClick={() => state.addInner()}>addInner</button>
-                <button onClick={() => state?.inner?.updateIndex()}>
-                    inner:{inner?.index}
-                </button>
 
                 <div>
                     <span>sum:{sum}</span>
+                    <div>
+                        {state?.inner ? (
+                            <button onClick={() => state?.inner?.updateIndex()}>
+                                inner:{inner?.index}
+                            </button>
+                        ) : null}
+                    </div>
                 </div>
             </div>
         </>
