@@ -2,10 +2,12 @@ import { appState } from './state';
 
 export function App() {
     const [state] = appState.useState();
-    const { sum, innerUseState } = state.useSelector((state) => {
+    const { sum, innerUseState } = state.useSelector((state, trigger) => {
+        state.inner?.bind(trigger);
+
         return {
             sum: state.index1 + state.index2,
-            innerUseState: state.inner?.useState,
+            innerUseState: state.inner?.inner,
         };
     });
 
