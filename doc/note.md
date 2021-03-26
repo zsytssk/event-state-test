@@ -1,6 +1,6 @@
 在 react 开发过程中常常需要数据管理，redux 无疑是其中的用的最多的。
 我在使用 redux 的过程中，觉得他太复杂太绕了，尤其是在 hook 出现之前。
-hook 出现之后虽然有好转，但是我用起来，也谈不上舒服；
+hook 出现之后虽然有好转，但是我用起来，还是谈不上舒服；
 
 我在漫长的开发过程中，有很长的时间从事 h5 游戏开发，对于数据管理形成自己的一种方法；
 自己创造的东西，用起来自然得心应手，它也十分的简单方便；
@@ -14,7 +14,7 @@ hook 出现之后虽然有好转，但是我用起来，也谈不上舒服；
 它的原理正与它的名字，通过事件来监听数据的改变；你改变数据你就分发事件，在需要的地方监听需要的事件；
 它的代码十分的简单
 
--   [event.ts](https://github.com/zsytssk/event-state/blob/master/event.ts)--一个事件管理类，
+-   [event.ts](https://github.com/zsytssk/event-state/blob/master/event.ts) 事件管理类，
 -   [hook.ts](https://github.com/zsytssk/event-state/blob/master/hooks.ts) 一个 hook 生成器，监听事件创建 useState(), useSelector()
 -   [index.ts](https://github.com/zsytssk/event-state/blob/master/index.ts) 一个继承 Event，同时组合 useState(), useSelector()的类
 
@@ -26,7 +26,7 @@ hook 出现之后虽然有好转，但是我用起来，也谈不上舒服；
 npm install react-event-state
 ```
 
-然后就是见证奇迹的地方了：
+首先你需要创建一个数据类
 
 ```ts
 import { EventState } from 'react-event-state';
@@ -57,7 +57,7 @@ export const appState = new State();
 数据类 State 上面有 index1 和 index2 两个数据需要改变，有两个事件 StateEvent.UpdateIndex1|UpdateIndex2;
 更新 index1 触发 StateEvent.UpdateIndex1，index2 改变触发 StateEvent.UpdateIndex2；
 
-接下来就是使用了
+然后就是见证奇迹的地方了：
 
 ```ts
 //app.tsx
@@ -88,7 +88,7 @@ export function App() {
 }
 ```
 
-就这么简单，`const [state, stateId] = appState.useState()` 只要这样就可以使用数据了，每次 state 发生改变 state 本身并不会变化， 如果你需要监听 state 改变去做某些事情，监听`stateId`就可以了；还有一个贴心的 `useSelector` 就像 redux 一样使用；
+就这么简单，`const [state, stateId] = appState.useState()` 只要这样就可以使用数据了，每次 state 内属性发生改变 state 本身并不会变化， 如果你需要监听 state 改变去做某些事情，监听`stateId`就可以了；还有一个贴心的 `useSelector` 就像 redux 一样使用；
 在实际的项目中你可以创建任意多的这个类， 也可以把这些类串联；是不是十分的简单，so easy，再也不用担心我的数据管理了；
 
 ## 进阶
@@ -112,7 +112,23 @@ class State extends EventState {
 ```
 
 你在使用数据的时候，不可能只用一个类，如果有多个类串联就像上面的代码 State 下有一个 inner 怎么办；
-在 react 代码`appState.useState()`怎么保证在 Inner 改变之后触发改变呢？
-react-event-state 的原理是事件，Inner 下的事件 State 并不知道，
+在 react 代码`appState.useState()`如何保证在 Inner 改变之后触发改变呢？
+react-event-state 的原理是事件，Inner 下的事件 State 并不知道，`bindFn`就是为了处理这个问题的；
+
+```ts
+appState.useState(undefined, (triggerFn) => {
+    const off = state.inner?.bind(triggerFn);
+    return off;
+});
+```
+
+triggerFn 会触发 appState.useState-hook 的改变，`state.inner?.bind`就是把 triggerFn 绑定到 state.inner 上；
+`return off`是取消绑定，bindFn 里面的代码和 useEffect 类似;
+
+useSelector 的使用方法和 useState 类似
+
+[完整的示例代码](https://github.com/zsytssk/event-state-test)
+
+## 其他
 
 也许未来我可以用一个 EventMap 来管理监听的事件...
