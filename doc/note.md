@@ -97,7 +97,7 @@ export function App() {
 还可以进一步的优化
 
 ```ts
-public useState: (eventList?: string[], bindFn?: BindFn) => [this, number];
+public useState: (eventList?: string[]) => [this, number];
 ```
 
 -   如果你只想监听 index1 的改变怎么办？useState 默认监听所有的事件，只要传人在使用的时候`[StateEvent.UpdateIndex1]`就可以只用监听 index1；
@@ -116,10 +116,7 @@ class State extends EventState {
 react-event-state 的原理是事件，Inner 下的事件 State 并不知道，`bindFn`就是为了处理这个问题的；
 
 ```ts
-appState.useState(undefined, (triggerFn) => {
-    const off = state.inner?.bind(triggerFn);
-    return off;
-});
+appState.useState(undefined);
 ```
 
 triggerFn 会触发 appState.useState-hook 的改变，`state.inner?.bind`就是把 triggerFn 绑定到 state.inner 上；

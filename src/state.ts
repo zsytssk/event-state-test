@@ -26,7 +26,7 @@ class State extends EventState {
         this.emit(StateEvent.UpdateIndex2);
     }
     public addInner() {
-        this.inner = new Inner();
+        this.inner = new Inner(this);
         this.emit(StateEvent.AddInner);
     }
 }

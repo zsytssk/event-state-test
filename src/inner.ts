@@ -1,14 +1,14 @@
 import { EventState } from 'react-event-state';
 
-const InnerEvent = {
-    UpdateIndex1: 'UpdateIndex1',
-    UpdateIndex2: 'UpdateIndex2',
+export const InnerEvent = {
+    UpdateIndex1: 'inner:UpdateIndex1',
+    UpdateIndex2: 'inner:UpdateIndex2',
 };
 
 export class Inner extends EventState {
     public index = 0;
-    constructor() {
-        super([...Object.values(InnerEvent)]);
+    constructor(parent: EventState) {
+        super([...Object.values(InnerEvent)], parent);
     }
     public updateIndex() {
         this.index += 1;

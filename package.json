@@ -16,7 +16,7 @@
         "less": "^3.11.3",
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
-        "react-event-state": "^0.1.6"
+        "react-event-state": "^0.2.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.12.1",
