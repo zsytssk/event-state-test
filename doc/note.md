@@ -94,14 +94,8 @@ export function App() {
 ## 进阶
 
 它的原理是监听事件改变，每次数据改变，并不会创建新的对象，也不用对比对象，这显然比 redux 的的方式更加的高效；
-还可以进一步的优化
-
-```ts
-public useState: (eventList?: string[]) => [this, number];
-```
 
 -   如果你只想监听 index1 的改变怎么办？useState 默认监听所有的事件，只要传人在使用的时候`[StateEvent.UpdateIndex1]`就可以只用监听 index1；
--   就是接下来的第二个秘诀，这关系到它的第二个参数 bindFn
 
 ```ts
 class State extends EventState {
@@ -112,15 +106,19 @@ class State extends EventState {
 ```
 
 你在使用数据的时候，不可能只用一个类，如果有多个类串联就像上面的代码 State 下有一个 inner 怎么办；
-在 react 代码`appState.useState()`如何保证在 Inner 改变之后触发改变呢？
-react-event-state 的原理是事件，Inner 下的事件 State 并不知道，`bindFn`就是为了处理这个问题的；
+`appState.useState()` 只会默认监听 appState.eventList 中的事件，如何保证在 Inner 改变之后触发改变呢？
+react-event-state 的原理是事件，Inner 下的事件 并不会在 State 上触发，如果你想要这个功能在 inner 初始化的时候将 State 的实例作为对象当作 super 第二个参数就可以了，这样所有 event 的事件都会在 parent 上触发
 
 ```ts
-appState.useState(undefined);
-```
+class Inner extends EventState {
+    ...
+    constructor(parent: EventState) {
+        super([...Object.values(InnerEvent)], parent);
+    }
+    ...
+}
 
-triggerFn 会触发 appState.useState-hook 的改变，`state.inner?.bind`就是把 triggerFn 绑定到 state.inner 上；
-`return off`是取消绑定，bindFn 里面的代码和 useEffect 类似;
+```
 
 useSelector 的使用方法和 useState 类似
 
