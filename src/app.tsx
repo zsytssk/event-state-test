@@ -1,10 +1,9 @@
-import { appState } from './state';
+import { appState, StateEvent } from './state';
 
 export function App() {
-    const [state] = appState.useState(undefined, (triggerFn) => {
-        const off = state.inner?.bind(triggerFn);
-        return off;
-    });
+    const [state] = appState.useState([StateEvent.UpdateIndex1]);
+
+    console.log(`test:>`);
 
     return (
         <>
@@ -22,17 +21,6 @@ export function App() {
                         inner:{state?.inner?.index}
                     </button>
                 </div>
-
-                {/* <div>
-                    <span>sum:{sum}</span>
-                    <div>
-                        {state?.inner ? (
-                            <button onClick={() => state?.inner?.updateIndex()}>
-                                inner:{inner?.index}
-                            </button>
-                        ) : null}
-                    </div>
-                </div> */}
             </div>
         </>
     );

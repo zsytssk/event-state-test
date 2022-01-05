@@ -1,7 +1,7 @@
 import { EventState } from 'react-event-state';
 import { Inner } from './inner';
 
-const StateEvent = {
+export const StateEvent = {
     UpdateIndex1: 'UpdateIndex1',
     UpdateIndex2: 'UpdateIndex2',
     AddInner: 'AddInner',
