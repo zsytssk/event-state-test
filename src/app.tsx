@@ -1,11 +1,14 @@
 import { useEffect } from 'react';
+import { useEventState } from 'react-event-state/hooks';
 import { InnerEvent } from './inner';
 import { appState, StateEvent } from './state';
 
 export function App() {
-    const [state1, state1Id] = appState.useState([StateEvent.UpdateIndex1]);
-    const [state, stateId] = appState.useState();
-    const [stateWithInner, stateWithInnerId] = appState.useState([
+    const [state1, state1Id] = useEventState(appState, [
+        StateEvent.UpdateIndex1,
+    ]);
+    const [state, stateId] = useEventState(appState);
+    const [stateWithInner, stateWithInnerId] = useEventState(appState, [
         ...Object.values(StateEvent),
         ...Object.values(InnerEvent),
     ]);
